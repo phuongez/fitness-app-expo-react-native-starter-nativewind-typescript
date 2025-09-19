@@ -62,15 +62,15 @@ export default function Page() {
           <View className="flex-1 justify-center">
             <View className="items-center mb-8">
               {/* <View className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl items-center justify-center mb-4 shadow-lg">
-                <Ionicons name="fitness" size={40} color="white" />
-              </View> */}
+               <Ionicons name="fitness" size={40} color="white" />
+             </View> */}
               <Image source={Logo} className="w-20 h-20 mb-4" />
               <Text className="text-3xl font-bold text-gray-900 mb-2">
                 Live Fit App
               </Text>
-              <Text className="text-lg text-gray-600 text-center">
-                Track your fitness journey {"\n"} and reach your goals
-              </Text>
+              {/* <Text className="text-lg text-gray-600 text-center">
+               Track your fitness journey {"\n"} and reach your goals
+             </Text> */}
             </View>
 
             {/* Sign in form */}
@@ -88,7 +88,7 @@ export default function Page() {
                   <TextInput
                     autoCapitalize="none"
                     value={emailAddress}
-                    placeholder="Enter your email"
+                    placeholder="Nhập email của bạn"
                     placeholderTextColor={"#9CA3AF"}
                     onChangeText={setEmailAddress}
                     className="flex-1 ml-3 text-gray-900"
@@ -110,7 +110,7 @@ export default function Page() {
                   <TextInput
                     secureTextEntry={true}
                     value={password}
-                    placeholder="Enter your password"
+                    placeholder="Nhập mật khẩu"
                     placeholderTextColor={"#9CA3AF"}
                     onChangeText={setPassword}
                     className="flex-1 ml-3 text-gray-900"
@@ -123,7 +123,7 @@ export default function Page() {
             {/* Sign in button */}
             <TouchableOpacity
               className={`rounded-xl py-4 shadow-sm mb-4 ${
-                isLoading ? "bg-gray-400" : "bg-blue-600"
+                isLoading ? "bg-gray-400" : "bg-yellow-500/90"
               }`}
               onPress={onSignInPress}
               disabled={isLoading}
@@ -151,21 +151,23 @@ export default function Page() {
             <GoogleSignIn />
           </View>
           {/* Sign up link */}
-          <View className="flex-row items-center justify-center">
-            <Text className="text-gray-600">Bạn chưa có tài khoản?</Text>
+          <View className="flex-row items-center justify-center mb-6">
+            <Text className="text-gray-600">Bạn chưa có tài khoản? </Text>
             <Link href={"/sign-up"} asChild>
               <TouchableOpacity>
-                <Text className="text-blue-600 font-semibold">Đăng ký</Text>
+                <Text className="text-yellow-500/90 font-semibold">
+                  Đăng ký
+                </Text>
               </TouchableOpacity>
             </Link>
           </View>
 
           {/* Footer */}
-          <View className="pb-6">
-            <Text className="text-center text-gray-500 text-sm">
-              Start your fitness journey today
-            </Text>
-          </View>
+          {/* <View className="pb-6">
+           <Text className="text-center text-gray-500 text-sm">
+             Start your fitness journey today
+           </Text>
+         </View> */}
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

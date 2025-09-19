@@ -1,8 +1,17 @@
 import * as React from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useSignUp } from "@clerk/clerk-expo";
 import { Link, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Logo from "../../../imgs/livefit-logo-1.png";
 
 export default function SignUpScreen() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -81,8 +90,28 @@ export default function SignUpScreen() {
   }
 
   return (
-    <SafeAreaView>
-      <>
+    <SafeAreaView className="flex-1 bg-gray-50">
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <View className="flex-1 px-6">
+          {/* Main */}
+          <View className="flex-1 justify-center">
+            <View className="items-center mb-8">
+              <Image source={Logo} className="w-20 h-20 mb-4" />
+              <Text className="text-3xl font-bold text-gray-900 mb-2">
+                Đăng ký Live Fit App
+              </Text>
+            </View>
+            {/* Sign up form */}
+            <View className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
+              <Text className="text-2xl font-bold text-gray-900 mb-6 text-center">
+                Tạo tài khoản
+              </Text>
+            </View>
+          </View>
+          {/* Footer */}
+        </View>
         <Text>Sign up</Text>
         <TextInput
           autoCapitalize="none"
@@ -105,7 +134,7 @@ export default function SignUpScreen() {
             <Text>Sign in</Text>
           </Link>
         </View>
-      </>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
