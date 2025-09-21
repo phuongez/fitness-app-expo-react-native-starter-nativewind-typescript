@@ -1,6 +1,7 @@
 import { useSignIn } from "@clerk/clerk-expo";
 import { Link, useRouter } from "expo-router";
 import {
+  Alert,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -26,6 +27,12 @@ export default function Page() {
   // Handle the submission of the sign-in form
   const onSignInPress = async () => {
     if (!isLoaded) return;
+    if (!emailAddress || !password) {
+      Alert.alert("Có lỗi", "Vui lòng điền đủ thông tin");
+      return;
+    }
+
+    setIsLoading(true);
 
     // Start the sign-in process using the email and password provided
     try {
@@ -48,6 +55,8 @@ export default function Page() {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
       console.error(JSON.stringify(err, null, 2));
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -99,7 +108,7 @@ export default function Page() {
               {/* Password input */}
               <View className="mb-4">
                 <Text className="text-sm font-medium text-gray-700 mb-2">
-                  Mạt khẩu
+                  Mật khẩu
                 </Text>
                 <View className="flex-row items-center bg-gray-50 rounded-xl px-4 py-4 border border-gray-200">
                   <Ionicons
