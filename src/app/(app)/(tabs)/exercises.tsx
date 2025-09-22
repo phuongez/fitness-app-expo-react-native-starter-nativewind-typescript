@@ -6,7 +6,7 @@ import {
   FlatList,
   RefreshControl,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import exercise from "sanity/schemaTypes/exercise";
@@ -38,6 +38,17 @@ const Exercises = () => {
       console.log("Có lỗi khi tải bài tập:", error);
     }
   };
+
+  useEffect(() => {
+    fetchExercises();
+  }, []);
+
+  useEffect(() => {
+    const filtered = exercises.filter((exercise) =>
+      exercise.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredExercises(filtered);
+  }, [searchQuery, exercises]);
 
   const onRefresh = async () => {
     setRefreshing(true);
