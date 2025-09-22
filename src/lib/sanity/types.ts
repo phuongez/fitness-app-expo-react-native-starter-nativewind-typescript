@@ -184,3 +184,15 @@ export type SanityAssetSourceData = {
 
 export type AllSanitySchemaTypes = Workout | Exercise | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
+// Source: ../src/app/(app)/(tabs)/exercises.tsx
+// Variable: exerciseQuery
+// Query: *[_type == "exercise"] {  }
+export type ExerciseQueryResult = Array<{}>;
+
+// Query TypeMap
+import "@sanity/client";
+declare module "@sanity/client" {
+  interface SanityQueries {
+    "*[_type == \"exercise\"] {\n  }": ExerciseQueryResult;
+  }
+}

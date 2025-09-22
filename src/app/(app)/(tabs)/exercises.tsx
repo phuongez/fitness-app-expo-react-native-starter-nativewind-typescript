@@ -4,6 +4,7 @@ import {
   TextInput,
   TouchableOpacity,
   FlatList,
+  RefreshControl,
 } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -12,12 +13,16 @@ import exercise from "sanity/schemaTypes/exercise";
 import Exercise from "sanity/schemaTypes/exercise";
 import { useRouter } from "expo-router";
 import { defineQuery } from "groq";
+import { client } from "@/lib/sanity/client";
+import ExerciseCard from "@/app/components/ExerciseCard";
 
 export const exerciseQuery = defineQuery(`*[_type == "exercise"] {
+  ...
   }`);
 
 const Exercises = () => {
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [exercises, setExercises] = React.useState([]);
   const router = useRouter();
   const [filteredExercises, setFilteredExercises] = React.useState([]);
 
@@ -70,7 +75,7 @@ const Exercises = () => {
       </View>
 
       <FlatList
-        data={[]}
+        data={filteredExercises}
         keyExtractor={(item) => item._id}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ padding: 24 }}
@@ -85,7 +90,7 @@ const Exercises = () => {
             refreshing={refreshing}
             onRefresh={onRefresh}
             colors={["#3B82F6"]}
-            tintColors="#3B82F6"
+            tintColor="#3B82F6"
             title="Kéo để làm mới danh sách bài tập"
             titleColor="#6B7280"
           />

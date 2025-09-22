@@ -13,6 +13,7 @@
     "@clerk/clerk-expo": "^2.15.0",
     "@expo/vector-icons": "^14.1.0",
     "@sanity/client": "^7.11.2",
+    "@sanity/image-url": "^1.2.0",
     "expo": "^53.0.4",
     "expo-constants": "~17.1.4",
     "expo-linking": "~7.1.4",
