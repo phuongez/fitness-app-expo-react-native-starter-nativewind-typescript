@@ -110,7 +110,7 @@ const Exercises = () => {
           <View className="bg-white rounded-2xl p-8 items-center">
             <Ionicons name="fitness-outline" size={64} color="#9CA3AF" />
             <Text className="text-xl font-semibold text-gray-900 mt-4">
-              {searchQuery ? "Khoông tìm thấy bài tập" : "Tải bài tập..."}
+              {searchQuery ? "Không tìm thấy bài tập" : "Tải bài tập..."}
             </Text>
             <Text className="text-gray-600 text-center mt-2">
               {searchQuery
