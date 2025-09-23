@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  Linking,
+  ActivityIndicator,
 } from "react-native";
 import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -14,6 +16,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { client, urlFor } from "@/lib/sanity/client";
 import { Exercise } from "@/lib/sanity/types";
 import { defineQuery } from "groq";
+import {
+  getDifficultyColor,
+  getDifficultyText,
+} from "../components/ExerciseCard";
+import exercise from "sanity/schemaTypes/exercise";
 
 const singleExerciseQuery = defineQuery(
   `*[_type == "exercise" && _id == $id][0]`
@@ -41,6 +48,33 @@ const ExerciseDetail = () => {
     };
     fetchExercise();
   }, [id]);
+
+  if (loading) {
+    return (
+      <SafeAreaView className="flex-1 bg-white">
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator size="large" color={"#0000ff"} />
+          <Text className="text-gray-500">Đang tải bài tập...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (!exercise) {
+    return (
+      <SafeAreaView className="flex-1 bg-white">
+        <View className="flex-1 items-center justify-center">
+          <Text className="text-gray-500">Không tìm thấy bài tập: {id}</Text>
+          <TouchableOpacity
+            onPress={() => router.back()}
+            className="mt-4 bg-blue-500 px-6 py-3 rounded-lg"
+          >
+            <Text className="text-white font-semibold">Trở về</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -70,6 +104,59 @@ const ExerciseDetail = () => {
           )}
           {/* Gradient overlay */}
           <View className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/60 to-transparent"></View>
+        </View>
+        {/* Content */}
+        <View className="px-6 py-6">
+          {/* Title and difficulty */}
+          <View className="flex-row items-start justify-between mb-4">
+            <View className="flex-1 mr-4">
+              <Text className="text-3xl font-bold text-gray-800 mb-2">
+                {excercise?.name}
+              </Text>
+              <View
+                className={`self-start px-4 py-2  rounded-full ${getDifficultyColor(
+                  excercise?.difficulty
+                )}`}
+              >
+                <Text className="text-sm font-semibold text-white">
+                  {getDifficultyText(excercise?.difficulty)}
+                </Text>
+              </View>
+            </View>
+          </View>
+          {/* Description */}
+          <View className="mb-6">
+            <Text className="text-xl font-semibold text-gray-800 mb-3">
+              Mô tả
+            </Text>
+            <Text className="text-gray-600 leading-6 text-base">
+              {excercise?.description || "Không có mô tả của bài tập này"}
+            </Text>
+          </View>
+          {/* Video section */}
+          {excercise?.videoUrl && (
+            <View className="mb-6">
+              <Text className="text-xl font-semibold text-gray-800 mb-3">
+                Video hướng dẫn
+              </Text>
+              <TouchableOpacity
+                className="bg-red-500 rounded-xl p-4 flex-row items-center"
+                onPress={() => Linking.openURL(excercise.videoUrl)}
+              >
+                <View className="w-12 h-1/2 bg-white rounded-full items-center justify-center mr-4">
+                  <Ionicons name="play" size={20} color="#EF4444" />
+                </View>
+                <View>
+                  <Text className="text-white font-semibold text-lg">
+                    Xem hướng dẫn
+                  </Text>
+                  <Text className="text-red-100 text-sm">
+                    Học kĩ thuật đúng
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>

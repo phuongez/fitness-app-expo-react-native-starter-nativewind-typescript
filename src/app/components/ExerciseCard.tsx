@@ -4,7 +4,7 @@ import { Exercise } from "@/lib/sanity/types";
 import { urlFor } from "@/lib/sanity/client";
 import { Ionicons } from "@expo/vector-icons";
 
-const getDifficultyColor = (difficulty: string) => {
+export const getDifficultyColor = (difficulty: string) => {
   switch (difficulty) {
     case "beginner":
       return "bg-green-500";
@@ -17,7 +17,7 @@ const getDifficultyColor = (difficulty: string) => {
   }
 };
 
-const getDifficultyText = (difficulty: string) => {
+export const getDifficultyText = (difficulty: string) => {
   switch (difficulty) {
     case "beginner":
       return "Beginner";
