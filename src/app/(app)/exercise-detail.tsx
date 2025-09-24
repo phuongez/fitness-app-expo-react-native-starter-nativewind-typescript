@@ -48,6 +48,30 @@ const ExerciseDetail = () => {
     fetchExercise();
   }, [id]);
 
+  const getAiGuidance = async () => {
+    if (!exercise) return;
+    setAILoading(true);
+    try {
+      const response = await fetch("/api/ai", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ exerciseName: exercise.name }),
+      });
+      if (!response.ok) {
+        throw new Error("Gặp lỗi khi tạo hướng dẫn AI");
+      }
+      const data = await response.json();
+      setAIGuidance(data.message);
+    } catch (error) {
+      console.error("Gặp lỗi khi tạo hướng dẫn AI:", error);
+      setAIGuidance("Gặp lỗi khi tạo hướng dẫn AI. Vui lòng thử lại");
+    } finally {
+      setAILoading(false);
+    }
+  };
+
   if (loading) {
     return (
       <SafeAreaView className="flex-1 bg-white">
@@ -156,6 +180,47 @@ const ExerciseDetail = () => {
               </TouchableOpacity>
             </View>
           )}
+
+          {/* Todo: Ai Guidance */}
+
+          {/* ---- */}
+
+          {/* Action buttons */}
+          <View className="mt-8 gap-2">
+            {/* AI coach button */}
+            <TouchableOpacity
+              className={`rounded-xl py-4 items-center ${
+                aiLoading
+                  ? "bg-gray-400"
+                  : aiGuidance
+                  ? "bg-green-500"
+                  : "bg-blue-500"
+              }`}
+              onPress={getAiGuidance}
+              disabled={aiLoading}
+            >
+              {aiLoading ? (
+                <View className="flex-row items-center">
+                  <ActivityIndicator size={"small"} color="white" />
+                  <Text className="text-white font-semibold ml-2">
+                    Đang tải...
+                  </Text>
+                </View>
+              ) : (
+                <Text className="text-white font-bold text-lg">
+                  {aiGuidance
+                    ? "Tải lại hướng dẫn AI"
+                    : "Tạo hướng dẫn kỹ thuật với AI "}
+                </Text>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="bg-gray-200 rounded-xl py-4 items-center"
+              onPress={() => router.back()}
+            >
+              <Text className="text-gray-800 font-bold text-lg">Đóng</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
