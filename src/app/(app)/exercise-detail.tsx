@@ -20,14 +20,13 @@ import {
   getDifficultyColor,
   getDifficultyText,
 } from "../components/ExerciseCard";
-import exercise from "sanity/schemaTypes/exercise";
 
 const singleExerciseQuery = defineQuery(
   `*[_type == "exercise" && _id == $id][0]`
 );
 
 const ExerciseDetail = () => {
-  const [excercise, setExcercise] = React.useState<Exercise | null>(null);
+  const [exercise, setExercise] = React.useState<Exercise | null>(null);
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const [loading, setLoading] = React.useState(true);
@@ -39,7 +38,7 @@ const ExerciseDetail = () => {
       if (!id) return;
       try {
         const exerciseData = await client.fetch(singleExerciseQuery, { id });
-        setExcercise(exerciseData);
+        setExercise(exerciseData);
       } catch (error) {
         console.error("Error fetching exercise:", error);
       } finally {
@@ -91,9 +90,9 @@ const ExerciseDetail = () => {
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         {/* Hero image */}
         <View className="h-80 bg-white relative">
-          {excercise?.image ? (
+          {exercise?.image ? (
             <Image
-              source={{ uri: urlFor(excercise.image?.asset._ref).url() }}
+              source={{ uri: urlFor(exercise.image?.asset._ref).url() }}
               className="w-full h-full"
               resizeMode="contain"
             />
@@ -111,15 +110,15 @@ const ExerciseDetail = () => {
           <View className="flex-row items-start justify-between mb-4">
             <View className="flex-1 mr-4">
               <Text className="text-3xl font-bold text-gray-800 mb-2">
-                {excercise?.name}
+                {exercise?.name}
               </Text>
               <View
                 className={`self-start px-4 py-2  rounded-full ${getDifficultyColor(
-                  excercise?.difficulty
+                  exercise?.difficulty
                 )}`}
               >
                 <Text className="text-sm font-semibold text-white">
-                  {getDifficultyText(excercise?.difficulty)}
+                  {getDifficultyText(exercise?.difficulty)}
                 </Text>
               </View>
             </View>
@@ -130,18 +129,18 @@ const ExerciseDetail = () => {
               Mô tả
             </Text>
             <Text className="text-gray-600 leading-6 text-base">
-              {excercise?.description || "Không có mô tả của bài tập này"}
+              {exercise?.description || "Không có mô tả của bài tập này"}
             </Text>
           </View>
           {/* Video section */}
-          {excercise?.videoUrl && (
+          {exercise?.videoUrl && (
             <View className="mb-6">
               <Text className="text-xl font-semibold text-gray-800 mb-3">
                 Video hướng dẫn
               </Text>
               <TouchableOpacity
                 className="bg-red-500 rounded-xl p-4 flex-row items-center"
-                onPress={() => Linking.openURL(excercise.videoUrl)}
+                onPress={() => Linking.openURL(exercise.videoUrl)}
               >
                 <View className="w-12 h-1/2 bg-white rounded-full items-center justify-center mr-4">
                   <Ionicons name="play" size={20} color="#EF4444" />
