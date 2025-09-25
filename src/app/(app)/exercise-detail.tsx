@@ -66,7 +66,7 @@ const ExerciseDetail = () => {
       setAIGuidance(data.message);
     } catch (error) {
       console.error("Gặp lỗi khi tạo hướng dẫn AI:", error);
-      setAIGuidance("Gặp lỗi khi tạo hướng dẫn AI. Vui lòng thử lại");
+      setAIGuidance("Gặp lỗi khi tạo hướng d4ẫn AI. Vui lòng thử lại");
     } finally {
       setAILoading(false);
     }
