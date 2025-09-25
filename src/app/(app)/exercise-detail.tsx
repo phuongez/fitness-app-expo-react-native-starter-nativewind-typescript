@@ -20,6 +20,7 @@ import {
   getDifficultyColor,
   getDifficultyText,
 } from "../components/ExerciseCard";
+import Markdown from "react-native-markdown-display";
 
 const singleExerciseQuery = defineQuery(
   `*[_type == "exercise" && _id == $id][0]`
@@ -158,7 +159,7 @@ const ExerciseDetail = () => {
           </View>
           {/* Video section */}
           {exercise?.videoUrl && (
-            <View className="mb-6">
+            <View className="mb-2">
               <Text className="text-xl font-semibold text-gray-800 mb-3">
                 Video hướng dẫn
               </Text>
@@ -182,7 +183,50 @@ const ExerciseDetail = () => {
           )}
 
           {/* Todo: Ai Guidance */}
-
+          {(aiGuidance || aiLoading) && (
+            <View className="mb-6">
+              <View className="flex-row items-center mb-3">
+                <Ionicons name="fitness" size={24} color={"#3B82F6"} />
+                <Text className="text-xl font-semibold text-gray-800 ml-2">
+                  AI coach ...
+                </Text>
+              </View>
+              {aiLoading ? (
+                <View className="bg-gray-50 rounded-xl p-4 items-center">
+                  <ActivityIndicator size={"small"} color="#3B82F6" />
+                  <Text className="text-gray-600 mt-2">
+                    Đang tải hướng dẫn kỹ thuật
+                  </Text>
+                </View>
+              ) : (
+                <View className="bg-blue-50 rounded-xl p-4 border-l-4 border-blue-500">
+                  <Markdown
+                    style={{
+                      body: {
+                        paddingBottom: 20,
+                      },
+                      heading2: {
+                        fontSize: 18,
+                        fontWeight: "bold",
+                        color: "#1f2937",
+                        marginTop: 12,
+                        marginBottom: 6,
+                      },
+                      heading3: {
+                        fontSize: 16,
+                        fontWeight: "600",
+                        color: "#374151",
+                        marginTop: 8,
+                        marginBottom: 4,
+                      },
+                    }}
+                  >
+                    {aiGuidance}
+                  </Markdown>
+                </View>
+              )}
+            </View>
+          )}
           {/* ---- */}
 
           {/* Action buttons */}
