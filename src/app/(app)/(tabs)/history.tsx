@@ -1,11 +1,20 @@
 import { client } from "@/lib/sanity/client";
 import { GetWorkoutsQueryResult } from "@/lib/sanity/types";
 import { useUser } from "@clerk/clerk-expo";
+import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { defineQuery } from "groq";
 import { formatDuration } from "lib/utils";
 import React, { useEffect } from "react";
-import { ActivityIndicator, SafeAreaView, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export const getWorkoutsQuery =
   defineQuery(`*[_type == "workout" && user._ref == $userId] | order(date desc) {
@@ -42,6 +51,7 @@ export default function HistoryPage() {
     try {
       const results = await client.fetch(getWorkoutsQuery, { userId: user.id });
       setWorkouts(results);
+      console.log(results);
     } catch (error) {
       console.error("Error fetching workouts:", error);
     } finally {
@@ -109,7 +119,73 @@ export default function HistoryPage() {
 
   return (
     <SafeAreaView className="flex flex-1">
-      <Text>History</Text>
+      {/* Header */}
+      <View className="px-6 py-4 border-b border-gray-200 bg-white">
+        <Text className="text-2xl font-bold text-gray-900">
+          Lịch sử buổi tập
+        </Text>
+        <Text className="text-gray-600 mt-1">
+          {workouts.length} buổi tập được thực hiện
+        </Text>
+      </View>
+      {/* Workouts List */}
+      <ScrollView
+        className="flex-1"
+        contentContainerStyle={{ padding: 24 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        {workouts.length === 0 ? (
+          <View className="bg-white rounded-2xl p-8 items-center">
+            <Ionicons name="barbell-outline" size={64} color="#9CA3AF" />
+            <Text className="text-xl font-semibold text-gray-900 mt-4">
+              Không có buổi tập nào
+            </Text>
+            <Text className="text-gray-600 text-center mt-2">
+              Các buổi tập đã hoàn thành sẽ xuất hiện ở đây
+            </Text>
+          </View>
+        ) : (
+          <View className="space-y-4 gap-4">
+            {workouts.map((workout) => (
+              <TouchableOpacity
+                key={workout._id}
+                className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100"
+                activeOpacity={0.7}
+                onPress={() => {
+                  router.push({
+                    pathname: "/history/workout-record",
+                    params: { workoutId: workout._id },
+                  });
+                }}
+              >
+                {/* Workout header */}
+                <View className="flex-row items-center justify-between mb-4">
+                  <View className="flex-1">
+                    <Text className="text-lg font-semibold text-gray-900">
+                      {formatDate(workout.date || "")}
+                    </Text>
+                    <View className="flex-row items-center mt-1">
+                      <Ionicons name="time-outline" size={16} color="#6B7280" />
+                      <Text className="text-gray-600 ml-2">
+                        {formatWorkoutDuration(workout.duration)}
+                      </Text>
+                    </View>
+                  </View>
+                  <View className="bg-blue-100 rounded-full w-12 h-12 items-center justify-center">
+                    <Ionicons
+                      name="fitness-outline"
+                      size={24}
+                      color="#3B82F6"
+                    />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 }

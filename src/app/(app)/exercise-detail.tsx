@@ -167,7 +167,7 @@ const ExerciseDetail = () => {
                 className="bg-red-500 rounded-xl p-4 flex-row items-center"
                 onPress={() => Linking.openURL(exercise.videoUrl)}
               >
-                <View className="w-12 h-1/2 bg-white rounded-full items-center justify-center mr-4">
+                <View className="w-12 h-12 bg-white rounded-full items-center justify-center mr-4">
                   <Ionicons name="play" size={20} color="#EF4444" />
                 </View>
                 <View>
