@@ -51,7 +51,7 @@ export default function HistoryPage() {
     try {
       const results = await client.fetch(getWorkoutsQuery, { userId: user.id });
       setWorkouts(results);
-      console.log(results);
+      console.log(user.id);
     } catch (error) {
       console.error("Error fetching workouts:", error);
     } finally {
@@ -99,6 +99,22 @@ export default function HistoryPage() {
   const formatWorkoutDuration = (seconds?: number) => {
     if (!seconds) return "Thời lượng không được ghi lại";
     return formatDuration(seconds);
+  };
+
+  const getTotalSets = (workout: GetWorkoutsQueryResult[number]) => {
+    return (
+      workout.exercises?.reduce((total, exercise) => {
+        return total + (exercise.sets?.length || 0);
+      }, 0) || 0
+    );
+  };
+
+  const getExerciseNames = (workout: GetWorkoutsQueryResult[number]) => {
+    return (
+      workout.exercises
+        ?.map((exercise) => exercise.exercise?.name)
+        .filter(Boolean) || []
+    );
   };
 
   if (loading) {
@@ -179,6 +195,21 @@ export default function HistoryPage() {
                       size={24}
                       color="#3B82F6"
                     />
+                  </View>
+                </View>
+                {/* Workout Stats */}
+                <View className="flex-row items-center justify-between mb-4">
+                  <View className="flex-row items-center">
+                    <View className="bg-gray-100 rounded-lg px-3 py-2 mr-3">
+                      <Text className="text-sm font-medium text-gray-700">
+                        {workout.exercises?.length || 0} bài tập
+                      </Text>
+                      <View className="bg-gray-100 rounded-lg px-3 py-2">
+                        <Text className="text-sm font-medium text-gray-700">
+                          {getTotalSets(workout)} set
+                        </Text>
+                      </View>
+                    </View>
                   </View>
                 </View>
               </TouchableOpacity>

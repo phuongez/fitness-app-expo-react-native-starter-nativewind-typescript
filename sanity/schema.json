@@ -95,42 +95,61 @@
               "sets": {
                 "type": "objectAttribute",
                 "value": {
-                  "type": "number"
-                },
-                "optional": true
-              },
-              "reps": {
-                "type": "objectAttribute",
-                "value": {
-                  "type": "number"
-                },
-                "optional": true
-              },
-              "weight": {
-                "type": "objectAttribute",
-                "value": {
-                  "type": "number"
-                },
-                "optional": true
-              },
-              "weightUnit": {
-                "type": "objectAttribute",
-                "value": {
-                  "type": "union",
-                  "of": [
-                    {
-                      "type": "string",
-                      "value": "kg"
+                  "type": "array",
+                  "of": {
+                    "type": "object",
+                    "attributes": {
+                      "reps": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "number"
+                        },
+                        "optional": true
+                      },
+                      "weight": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "number"
+                        },
+                        "optional": true
+                      },
+                      "weightUnit": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "union",
+                          "of": [
+                            {
+                              "type": "string",
+                              "value": "kg"
+                            },
+                            {
+                              "type": "string",
+                              "value": "lb"
+                            }
+                          ]
+                        },
+                        "optional": true
+                      },
+                      "_type": {
+                        "type": "objectAttribute",
+                        "value": {
+                          "type": "string",
+                          "value": "set"
+                        }
+                      }
                     },
-                    {
-                      "type": "string",
-                      "value": "lb"
-                    },
-                    {
-                      "type": "string",
-                      "value": "other"
+                    "rest": {
+                      "type": "object",
+                      "attributes": {
+                        "_key": {
+                          "type": "objectAttribute",
+                          "value": {
+                            "type": "string"
+                          }
+                        }
+                      }
                     }
-                  ]
+                  }
                 },
                 "optional": true
               },

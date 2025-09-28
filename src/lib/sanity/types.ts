@@ -29,10 +29,13 @@ export type Workout = {
       _weak?: boolean;
       [internalGroqTypeReferenceTo]?: "exercise";
     };
-    sets?: number;
-    reps?: number;
-    weight?: number;
-    weightUnit?: "kg" | "lb" | "other";
+    sets?: Array<{
+      reps?: number;
+      weight?: number;
+      weightUnit?: "kg" | "lb";
+      _type: "set";
+      _key: string;
+    }>;
     _type: "workoutExercise";
     _key: string;
   }>;
@@ -225,7 +228,13 @@ export type GetWorkoutsQueryResult = Array<{
       _id: string;
       name: string | null;
     } | null;
-    sets: null;
+    sets: Array<{
+      reps: number | null;
+      weight: number | null;
+      weightUnit: "kg" | "lb" | null;
+      _type: "set";
+      _key: string;
+    }> | null;
     _type: "workoutExercise";
     _key: string;
   }> | null;
