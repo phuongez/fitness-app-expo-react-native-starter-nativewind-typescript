@@ -19,7 +19,12 @@ export type Workout = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  userId?: string;
+  user?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "user";
+  };
   date?: string;
   duration?: number;
   exercises?: Array<{
@@ -39,6 +44,17 @@ export type Workout = {
     _type: "workoutExercise";
     _key: string;
   }>;
+};
+
+export type User = {
+  _id: string;
+  _type: "user";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  clerkId?: string;
+  email?: string;
+  name?: string;
 };
 
 export type Exercise = {
@@ -185,7 +201,7 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = Workout | Exercise | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = Workout | User | Exercise | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ../src/app/(app)/(tabs)/exercises.tsx
 // Variable: exerciseQuery
@@ -216,9 +232,9 @@ export type ExerciseQueryResult = Array<{
   isActive?: boolean;
 }>;
 
-// Source: ../src/app/(app)/(tabs)/history.tsx
+// Source: ../src/app/(app)/(tabs)/history/index.tsx
 // Variable: getWorkoutsQuery
-// Query: *[_type == "workout" && user._ref == $userId] | order(date desc) {  _id,  date,  duration,  exercises[] {    exercise -> {    _id,    name    },    sets[] {    reps,    weight,    weightUnit,    _type,    _key    },    _type,    _key  },}
+// Query: *[_type == "workout" && user->clerkId == $userId] | order(date desc) {    _id,    date,    duration,    exercises[] {      exercise->{        _id,        name      },      sets[] {        reps,        weight,        weightUnit,        _type,        _key      },      _type,      _key    },  }
 export type GetWorkoutsQueryResult = Array<{
   _id: string;
   date: string | null;
@@ -239,6 +255,33 @@ export type GetWorkoutsQueryResult = Array<{
     _key: string;
   }> | null;
 }>;
+
+// Source: ../src/app/(app)/(tabs)/history/workout-record.tsx
+// Variable: getWorkoutRecordQuery
+// Query: *[_type == "workout" && _id == $workoutId][0] {    _id,    _type,    _createdAt,    date,    duration,    exercises[] {      exercise->{        _id,        name,        description      },      sets[] {        reps,        weight,        weightUnit,        _type,        _key      },      _type,      _key    },}
+export type GetWorkoutRecordQueryResult = {
+  _id: string;
+  _type: "workout";
+  _createdAt: string;
+  date: string | null;
+  duration: number | null;
+  exercises: Array<{
+    exercise: {
+      _id: string;
+      name: string | null;
+      description: string | null;
+    } | null;
+    sets: Array<{
+      reps: number | null;
+      weight: number | null;
+      weightUnit: "kg" | "lb" | null;
+      _type: "set";
+      _key: string;
+    }> | null;
+    _type: "workoutExercise";
+    _key: string;
+  }> | null;
+} | null;
 
 // Source: ../src/app/(app)/exercise-detail.tsx
 // Variable: singleExerciseQuery
@@ -274,7 +317,8 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     "*[_type == \"exercise\"] {\n  ...\n  }": ExerciseQueryResult;
-    "*[_type == \"workout\" && user._ref == $userId] | order(date desc) {\n  _id,\n  date,\n  duration,\n  exercises[] {\n    exercise -> {\n    _id,\n    name\n    },\n    sets[] {\n    reps,\n    weight,\n    weightUnit,\n    _type,\n    _key\n    },\n    _type,\n    _key\n  },\n}": GetWorkoutsQueryResult;
+    "*[_type == \"workout\" && user->clerkId == $userId] | order(date desc) {\n    _id,\n    date,\n    duration,\n    exercises[] {\n      exercise->{\n        _id,\n        name\n      },\n      sets[] {\n        reps,\n        weight,\n        weightUnit,\n        _type,\n        _key\n      },\n      _type,\n      _key\n    },\n  }\n  ": GetWorkoutsQueryResult;
+    "*[_type == \"workout\" && _id == $workoutId][0] {\n    _id,\n    _type,\n    _createdAt,\n    date,\n    duration,\n    exercises[] {\n      exercise->{\n        _id,\n        name,\n        description\n      },\n      sets[] {\n        reps,\n        weight,\n        weightUnit,\n        _type,\n        _key\n      },\n      _type,\n      _key\n    },\n}": GetWorkoutRecordQueryResult;
     "*[_type == \"exercise\" && _id == $id][0]": SingleExerciseQueryResult;
   }
 }

@@ -17,26 +17,27 @@ import {
 } from "react-native";
 
 export const getWorkoutsQuery =
-  defineQuery(`*[_type == "workout" && user._ref == $userId] | order(date desc) {
-  _id,
-  date,
-  duration,
-  exercises[] {
-    exercise -> {
+  defineQuery(`*[_type == "workout" && user->clerkId == $userId] | order(date desc) {
     _id,
-    name
+    date,
+    duration,
+    exercises[] {
+      exercise->{
+        _id,
+        name
+      },
+      sets[] {
+        reps,
+        weight,
+        weightUnit,
+        _type,
+        _key
+      },
+      _type,
+      _key
     },
-    sets[] {
-    reps,
-    weight,
-    weightUnit,
-    _type,
-    _key
-    },
-    _type,
-    _key
-  },
-}`);
+  }
+  `);
 
 export default function HistoryPage() {
   const { user } = useUser();
@@ -204,14 +205,41 @@ export default function HistoryPage() {
                       <Text className="text-sm font-medium text-gray-700">
                         {workout.exercises?.length || 0} bài tập
                       </Text>
-                      <View className="bg-gray-100 rounded-lg px-3 py-2">
-                        <Text className="text-sm font-medium text-gray-700">
-                          {getTotalSets(workout)} set
-                        </Text>
-                      </View>
+                    </View>
+                    <View className="bg-gray-100 rounded-lg px-3 py-2">
+                      <Text className="text-sm font-medium text-gray-700">
+                        {getTotalSets(workout)} set
+                      </Text>
                     </View>
                   </View>
                 </View>
+
+                {/*Exercise List */}
+                {workout.exercises && workout.exercises.length > 0 && (
+                  <View>
+                    <Text className="text-sm font-medium text-gray-700 mb-2">
+                      Các bài tập
+                    </Text>
+                    <View className="flex-row flex-wrap">
+                      {getExerciseNames(workout)
+                        .slice(0, 3)
+                        .map((name, index) => (
+                          <View className="bg-blue-50 rounded-lg px-3 py-1 mr-2 mb-2">
+                            <Text className="text-blue-700 text-sm font-medium">
+                              {name}
+                            </Text>
+                          </View>
+                        ))}
+                      {getExerciseNames(workout).length > 3 && (
+                        <View className="bg-gray-100 rounded-lg px-3 py-1 mr-2 mb-2">
+                          <Text className="text-gray-600 text-sm font-medium">
+                            +{getExerciseNames(workout).length - 3} bài khác
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                  </View>
+                )}
               </TouchableOpacity>
             ))}
           </View>

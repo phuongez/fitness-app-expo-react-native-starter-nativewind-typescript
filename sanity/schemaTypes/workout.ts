@@ -10,11 +10,12 @@ export default defineType({
     'Workout session của user, gồm ngày, thời lượng và danh sách exercises với sets chi tiết.',
   fields: [
     defineField({
-      name: 'userId',
-      title: 'User ID (Clerk)',
-      type: 'string',
-      description: 'Clerk User ID của người dùng thực hiện buổi tập',
-      validation: (Rule) => Rule.required().error('Bắt buộc có User ID'),
+      name: 'user',
+      title: 'User',
+      type: 'reference',
+      to: [{type: 'user'}], // trỏ tới schema user mới tạo
+      description: 'Tham chiếu tới user (Clerk)',
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'date',
