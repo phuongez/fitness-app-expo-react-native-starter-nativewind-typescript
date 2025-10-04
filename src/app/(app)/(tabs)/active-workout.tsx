@@ -66,6 +66,8 @@ const ActiveWorkout = () => {
     setShowExerciseSelection(true);
   };
 
+  const deleteExercise = (id: string) => {};
+
   return (
     <View className="flex-1">
       <StatusBar barStyle="light-content" backgroundColor={"#1F2937"} />
@@ -155,7 +157,39 @@ const ActiveWorkout = () => {
         >
           <ScrollView className="flex-1 px-6 mt-4">
             {workoutExercises.map((exercise) => (
-              <View className="mb-8" key={exercise.id}></View>
+              <View className="mb-8" key={exercise.id}>
+                {/* Exercise header */}
+                <TouchableOpacity
+                  onPress={() => {
+                    router.push({
+                      pathname: "/exercise-detail",
+                      params: { id: exercise.sanityId },
+                    });
+                  }}
+                  className="bg-blue-50 rounded-2xl p-4 mb-3"
+                >
+                  <View className="flex-row items-center justify-between">
+                    <View className="flex-1">
+                      <Text className="text-xl font-bold text-gray-900 mb-2">
+                        {exercise.name}
+                      </Text>
+                      <Text className="text-gray-600">
+                        {exercise.sets.length} set •{" "}
+                        {exercise.sets.filter((set) => set.isCompleted).length}{" "}
+                        hoàn thành
+                      </Text>
+                    </View>
+                    {/* Delete exercise button */}
+                    <TouchableOpacity
+                      onPress={() => deleteExercise(exercise.id)}
+                      className="h-10 w-10 rounded-xl items-center justify-center bg-red-500 ml-3"
+                      activeOpacity={0.8}
+                    >
+                      <Ionicons name="trash" size={16} color="white" />
+                    </TouchableOpacity>
+                  </View>
+                </TouchableOpacity>
+              </View>
             ))}
             {/* Add exercise button */}
             <TouchableOpacity
